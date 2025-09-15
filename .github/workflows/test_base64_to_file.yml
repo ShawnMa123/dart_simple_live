@@ -3,6 +3,7 @@ on: workflow_dispatch
 jobs:
   test:
     runs-on: macos-latest
+    environment: KEYSTORE_BASE64 # 替换为你的环境名称
     steps:
       - name: Test base64-to-file action
         id: test_keystore
@@ -10,7 +11,7 @@ jobs:
         with:
           fileName: test_keystore.jks
           encodedString: ${{ secrets.KEYSTORE_BASE64 }}
-      
+
       - name: Check if file was created
         run: |
           if [ -f "${{ steps.test_keystore.outputs.filePath }}" ]; then
@@ -19,7 +20,7 @@ jobs:
           else
             echo "File was not created"
           fi
-      
+
       - name: Print debug info
         run: |
           echo "KEYSTORE_BASE64 length: ${#KEYSTORE_BASE64}"

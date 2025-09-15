@@ -7,6 +7,7 @@ on:
 jobs:
   build-mac-ios-android:
     runs-on: macos-latest
+    environment: KEYSTORE_BASE64  # 替换为你的环境名称
     permissions:
       contents: write
     steps:
@@ -148,6 +149,7 @@ jobs:
   # 打包Linux
   build-linux:
     runs-on: ubuntu-22.04
+    environment: production  # 替换为你的环境名称
     permissions:
       contents: write
     steps:
@@ -219,6 +221,7 @@ jobs:
   # 打包Windows
   build-windows:
     runs-on: windows-latest
+    environment: production  # 替换为你的环境名称
     permissions:
       contents: write
     steps:
