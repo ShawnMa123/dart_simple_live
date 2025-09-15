@@ -1,6 +1,11 @@
 name: app-build-action
 #推送Tag时触发
 on:
+  workflow_dispatch:
+    inputs:
+      commit_id:
+        description: 'Commit ID to build'
+        required: false
   push:
     tags:
       - "tv_*"
@@ -13,7 +18,7 @@ jobs:
       #签出代码 
       - uses: actions/checkout@v4
         with:
-          ref: master
+          ref: ${{ github.event.inputs.commit_id || 'master' }}
         
       #APK签名设置
       - name: Download Android keystore
