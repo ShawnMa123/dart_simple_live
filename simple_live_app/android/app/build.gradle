@@ -65,21 +65,22 @@ android {
     }
 
     buildTypes {
-        buildTypes {
-            debug {
-                signingConfig signingConfigs.release
-            }
-            profile {
-                signingConfig signingConfigs.release
-            }
-            release {
-                signingConfig signingConfigs.release
-                minifyEnabled true
-                shrinkResources true
-                proguardFiles getDefaultProguardFile(
-                        'proguard-android-optimize.txt'),
-                        'proguard-rules.pro'
-            }
+        debug {
+            // 使用默认的debug签名配置
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+        profile {
+            // 使用默认的debug签名配置
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+        release {
+            // 使用默认的debug签名配置
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
         }
     }
 }
