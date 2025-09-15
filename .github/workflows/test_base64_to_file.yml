@@ -1,0 +1,29 @@
+name: Test Base64 to File
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - name: Test base64-to-file action
+        id: test_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: test_keystore.jks
+          encodedString: ${{ secrets.KEYSTORE_BASE64 }}
+      
+      - name: Check if file was created
+        run: |
+          if [ -f "${{ steps.test_keystore.outputs.filePath }}" ]; then
+            echo "File was created successfully at ${{ steps.test_keystore.outputs.filePath }}"
+            ls -la "${{ steps.test_keystore.outputs.filePath }}"
+          else
+            echo "File was not created"
+          fi
+      
+      - name: Print debug info
+        run: |
+          echo "KEYSTORE_BASE64 length: ${#KEYSTORE_BASE64}"
+          echo "First 10 characters: ${KEYSTORE_BASE64:0:10}..."
+          echo "Last 10 characters: ...${KEYSTORE_BASE64: -10}"
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
