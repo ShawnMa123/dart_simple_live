@@ -1,0 +1,40 @@
+# Git相关
+.git
+.gitignore
+
+# IDE相关
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 构建产物
+**/build/
+**/dist/
+output/
+
+# 依赖
+**/node_modules/
+**/.pub-cache/
+**/.dart_tool/
+
+# 临时文件
+**/.tmp/
+**/tmp/
+**/*.tmp
+**/*.temp
+
+# 日志文件
+**/*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# Docker相关
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# 文档
+*.md

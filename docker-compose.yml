@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  flutter-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./output:/output
+    container_name: flutter-app-builder
+    environment:
+      - FLUTTER_VERSION=3.22.3
+    # 可选：限制资源使用
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
