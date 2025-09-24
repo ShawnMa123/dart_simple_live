@@ -73,36 +73,53 @@ echo "开始构建Flutter应用..."\n\
 # 进入应用目录\n\
 cd simple_live_app\n\
 \n\
+# 清理缓存\n\
+echo "清理Flutter缓存..."\n\
+flutter clean\n\
+\n\
 # 获取依赖\n\
 echo "获取Flutter依赖..."\n\
 flutter pub get\n\
 \n\
-# 构建Android APK\n\
+# 检查Flutter配置\n\
+echo "检查Flutter配置..."\n\
+flutter doctor\n\
+\n\
+# 构建Android APK - 包括通用版本和按ABI分离的版本\n\
 echo "构建Android APK..."\n\
-flutter build apk --release --split-per-abi --no-shrink\n\
+flutter build apk --release --split-per-abi\n\
 \n\
-# 构建Linux应用\n\
-echo "构建Linux应用..."\n\
-flutter_distributor package --platform linux --targets deb,zip --skip-clean\n\
+# 构建通用APK（如果需要）\n\
+echo "构建通用APK..."\n\
+flutter build apk --release\n\
 \n\
-# 复制构建产物到输出目录\n\
-echo "复制构建产物..."\n\
+# 创建输出目录\n\
+mkdir -p /output/apk\n\
 \n\
 # 复制APK文件\n\
-mkdir -p /output/android\n\
-cp -r build/app/outputs/flutter-apk/*.apk /output/android/ 2>/dev/null || echo "未找到APK文件"\n\
+echo "复制APK文件..."\n\
+if [ -d "build/app/outputs/flutter-apk" ]; then\n\
+    cp build/app/outputs/flutter-apk/*.apk /output/apk/\n\
+    echo "APK文件已复制到 /output/apk/"\n\
+    echo "构建的APK文件："\n\
+    ls -la /output/apk/\n\
+else\n\
+    echo "错误：未找到APK构建目录"\n\
+    exit 1\n\
+fi\n\
 \n\
-# 复制Linux构建产物\n\
-mkdir -p /output/linux\n\
-cp -r build/dist/*/*.deb /output/linux/ 2>/dev/null || echo "未找到DEB文件"\n\
-cp -r build/dist/*/*.zip /output/linux/ 2>/dev/null || echo "未找到ZIP文件"\n\
+# 显示文件大小信息\n\
+echo ""\n\
+echo "APK文件详情："\n\
+for apk in /output/apk/*.apk; do\n\
+    if [ -f "$apk" ]; then\n\
+        size=$(du -h "$apk" | cut -f1)\n\
+        echo "$(basename "$apk"): $size"\n\
+    fi\n\
+done\n\
 \n\
-echo "构建完成！"\n\
-echo "构建产物保存在以下路径："\n\
-echo "- Android APK: /output/android/"\n\
-echo "- Linux应用: /output/linux/"\n\
-ls -la /output/android/ 2>/dev/null || echo "Android目录为空"\n\
-ls -la /output/linux/ 2>/dev/null || echo "Linux目录为空"\n\
+echo ""\n\
+echo "构建完成！APK文件保存在 /output/apk/ 目录下"\n\
 ' > /build.sh && chmod +x /build.sh
 
 # 暴露输出目录
