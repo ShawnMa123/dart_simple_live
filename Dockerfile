@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 
 # 设置环境变量
 ENV DEBIAN_FRONTEND=noninteractive
-ENV FLUTTER_VERSION=3.22.3
+ENV FLUTTER_VERSION=3.35.0
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
 ENV ANDROID_HOME=/opt/android-sdk
 ENV PATH="$PATH:/opt/flutter/bin:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools"
@@ -32,8 +32,9 @@ RUN apt-get update && apt-get install -y \
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
 # 下载并安装Flutter
-RUN git clone https://github.com/flutter/flutter.git -b stable /opt/flutter
-RUN /opt/flutter/bin/flutter doctor
+RUN git clone https://github.com/flutter/flutter.git -b stable --depth 1 /opt/flutter
+RUN /opt/flutter/bin/flutter config --no-analytics
+RUN /opt/flutter/bin/flutter precache --android
 
 # 创建Android SDK目录
 RUN mkdir -p $ANDROID_SDK_ROOT
@@ -83,15 +84,15 @@ flutter pub get\n\
 \n\
 # 检查Flutter配置\n\
 echo "检查Flutter配置..."\n\
-flutter doctor\n\
+flutter --version\n\
 \n\
 # 构建Android APK - 包括通用版本和按ABI分离的版本\n\
 echo "构建Android APK..."\n\
-flutter build apk --release --split-per-abi\n\
+flutter build apk --release --split-per-abi --no-tree-shake-icons\n\
 \n\
 # 构建通用APK（如果需要）\n\
 echo "构建通用APK..."\n\
-flutter build apk --release\n\
+flutter build apk --release --no-tree-shake-icons\n\
 \n\
 # 创建输出目录\n\
 mkdir -p /output/apk\n\
